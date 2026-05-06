@@ -150,6 +150,26 @@ function initial() {
 
         console.log("added 'moderator' to roles collection");
       });
+      
+      new Role({
+        name: "student"
+      }).save(err => {
+        if (err) {
+          console.log("error", err);
+        }
+
+        console.log("added 'student' to roles collection");
+      });
+      
+      new Role({
+        name: "parent"
+      }).save(err => {
+        if (err) {
+          console.log("error", err);
+        }
+
+        console.log("added 'parent' to roles collection");
+      });
 
       new Role({
         name: "admin"
