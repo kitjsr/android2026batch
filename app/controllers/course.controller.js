@@ -1,142 +1,155 @@
+// controllers/course.controller.js
+
 const db = require("../models");
-const Course = db.courses;
+const Course = db.course;
 
 // Create and Save a new Course
-exports.create = (req, res) => {
-  // Validate request
-  if (!req.body.cname) {
-    res.status(400).send({ message: "Course Name can not be empty!" });
-    return;
-  }
-
-  // Create a Course
-  const course = new Course({
-    cname: req.body.cname,
-    active: req.body.active ? req.body.active : false
-  });
-
-  // Save Course in the database
-  course
-    .save(course)
-    .then(data => {
-      res.send(data);
-    })
-    .catch(err => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while creating the Course."
+exports.create = async (req, res) => {
+  try {
+    if (!req.body.title || !req.body.category || req.body.price == null) {
+      return res.status(400).send({
+        message: "Title, category and price are required!",
       });
+    }
+
+    const course = new Course({
+      category: req.body.category,
+      badge: req.body.badge,
+      title: req.body.title,
+      isNew: req.body.isNew,
+      isFree: req.body.isFree,
+      language: req.body.language,
+      audience: req.body.audience,
+      startDate: req.body.startDate,
+      price: req.body.price,
+      originalPrice: req.body.originalPrice,
+      discount: req.body.discount,
+      batchName: req.body.batchName,
+      validity: req.body.validity,
+      description: req.body.description,
+      features: req.body.features,
     });
-};
 
-// Retrieve all courses from the database.
-exports.findAll = (req, res) => {
-  const cname = req.query.cname;
-  var condition = cname ? { cname: { $regex: new RegExp(cname), $options: "i" } } : {};
+    const data = await course.save();
 
-  Course.find(condition)
-    .then(data => {
-      res.send(data);
-    })
-    .catch(err => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while retrieving Courses."
-      });
-    });
-};
-
-// Find a single Course with an id
-exports.findOne = (req, res) => {
-  const id = req.params.id;
-
-  Course.findById(id)
-    .then(data => {
-      if (!data)
-        res.status(404).send({ message: "Not found Course with id " + id });
-      else res.send(data);
-    })
-    .catch(err => {
-      res
-        .status(500)
-        .send({ message: "Error retrieving Course with id=" + id });
-    });
-};
-
-// Update a Course by the id in the request
-exports.update = (req, res) => {
-  if (!req.body) {
-    return res.status(400).send({
-      message: "Data to update can not be empty!"
+    res.send(data);
+  } catch (err) {
+    res.status(500).send({
+      message: err.message || "Some error occurred while creating the course.",
     });
   }
-
-  const id = req.params.id;
-
-  Course.findByIdAndUpdate(id, req.body, { useFindAndModify: false })
-    .then(data => {
-      if (!data) {
-        res.status(404).send({
-          message: `Cannot update Course with id=${id}. Maybe Course was not found!`
-        });
-      } else res.send({ message: "Course was updated successfully." });
-    })
-    .catch(err => {
-      res.status(500).send({
-        message: "Error updating Course with id=" + id
-      });
-    });
 };
 
-// Delete a Course with the specified id in the request
-exports.delete = (req, res) => {
-  const id = req.params.id;
+// Retrieve all Courses
+exports.findAll = async (req, res) => {
+  try {
+    const data = await Course.find();
 
-  Course.findByIdAndRemove(id, { useFindAndModify: false })
-    .then(data => {
-      if (!data) {
-        res.status(404).send({
-          message: `Cannot delete Course with id=${id}. Maybe Course was not found!`
-        });
-      } else {
-        res.send({
-          message: "Course was deleted successfully!"
-        });
-      }
-    })
-    .catch(err => {
-      res.status(500).send({
-        message: "Could not delete Course with id=" + id
-      });
+    res.send(data);
+  } catch (err) {
+    res.status(500).send({
+      message: err.message || "Some error occurred while retrieving courses.",
     });
+  }
 };
 
-// Delete all Course from the database.
-exports.deleteAll = (req, res) => {
-  Course.deleteMany({})
-    .then(data => {
-      res.send({
-        message: `${data.deletedCount} Courses were deleted successfully!`
+// Find a single Course by id
+exports.findOne = async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    const data = await Course.findById(id);
+
+    if (!data) {
+      return res.status(404).send({
+        message: `Course not found with id=${id}`,
       });
-    })
-    .catch(err => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while removing all Courses."
-      });
+    }
+
+    res.send(data);
+  } catch (err) {
+    res.status(500).send({
+      message: "Error retrieving Course with id=" + req.params.id,
     });
+  }
 };
 
-// Find all published Courses
-exports.findAllActive = (req, res) => {
-  Course.find({ active: true })
-    .then(data => {
-      res.send(data);
-    })
-    .catch(err => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while retrieving Courses."
-      });
+// Update a Course by id
+exports.update = async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    const data = await Course.findByIdAndUpdate(id, req.body, {
+      useFindAndModify: false,
+      new: true,
     });
+
+    if (!data) {
+      return res.status(404).send({
+        message: `Cannot update Course with id=${id}. Maybe Course was not found!`,
+      });
+    }
+
+    res.send({
+      message: "Course updated successfully.",
+      data,
+    });
+  } catch (err) {
+    res.status(500).send({
+      message: "Error updating Course with id=" + req.params.id,
+    });
+  }
+};
+
+// Delete a Course by id
+exports.delete = async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    const data = await Course.findByIdAndDelete(id);
+
+    if (!data) {
+      return res.status(404).send({
+        message: `Cannot delete Course with id=${id}. Maybe Course was not found!`,
+      });
+    }
+
+    res.send({
+      message: "Course deleted successfully!",
+    });
+  } catch (err) {
+    res.status(500).send({
+      message: "Could not delete Course with id=" + req.params.id,
+    });
+  }
+};
+
+// Delete all Courses
+exports.deleteAll = async (req, res) => {
+  try {
+    const data = await Course.deleteMany({});
+
+    res.send({
+      message: `${data.deletedCount} Courses were deleted successfully!`,
+    });
+  } catch (err) {
+    res.status(500).send({
+      message:
+        err.message || "Some error occurred while removing all courses.",
+    });
+  }
+};
+
+// Find all free courses
+exports.findAllFree = async (req, res) => {
+  try {
+    const data = await Course.find({ isFree: true });
+
+    res.send(data);
+  } catch (err) {
+    res.status(500).send({
+      message:
+        err.message || "Some error occurred while retrieving free courses.",
+    });
+  }
 };

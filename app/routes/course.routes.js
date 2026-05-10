@@ -1,27 +1,29 @@
+
+
 module.exports = app => {
   const courses = require("../controllers/course.controller.js");
 
-  var router = require("express").Router();
+  const router = require("express").Router();
 
-  // Create a new course
+  // Create a new Course
   router.post("/", courses.create);
 
-  // Retrieve all courses
+  // Retrieve all Courses
   router.get("/", courses.findAll);
 
-  // Retrieve all published courses
-  router.get("/active", courses.findAllActive);
+  // Retrieve all Free Courses
+  router.get("/free", courses.findAllFree);
 
-  // Retrieve a single course with id
+  // Retrieve a single Course with id
   router.get("/:id", courses.findOne);
 
-  // Update a course with id
+  // Update a Course with id
   router.put("/:id", courses.update);
 
-  // Delete a course with id
+  // Delete a Course with id
   router.delete("/:id", courses.delete);
 
-  // Create a new course
+  // Delete all Courses
   router.delete("/", courses.deleteAll);
 
   app.use("/api/courses", router);
