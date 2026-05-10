@@ -7,16 +7,13 @@ module.exports = mongoose => {
         ref: 'User',
         required: true
       },
-      name:String,
-      addressLine1: String,
-      addressLine2: String,
+      title:String,
+      firstName:String,
+      lastName:String,
+      street: String,
       city: String,
-      district: String,
-      state: String,
-      pin: Number,
-      mobile: Number,
-      email:String,
-      addressType:String,
+      postalCode: Number,
+      country: String,
       active: Boolean
     },
     { timestamps: true }
