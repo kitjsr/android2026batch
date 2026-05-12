@@ -20,6 +20,7 @@ db.branches = require("./branch.model.js")(mongoose);
 db.bissues = require("./bissue.model.js")(mongoose);
 db.products = require("./product.model.js"); 
 db.ssproducts = require("./ssproduct.model.js"); 
+db.courseSyllabus = require("./courseSyllabus.model.js")(mongoose);
 
 db.profiles = require("./profile.model.js")(mongoose);
 db.questions = require("./question.model.js")(mongoose);
