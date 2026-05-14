@@ -41,7 +41,8 @@ exports.create = (req, res) => {
 
 // Retrieve all Orders
 exports.findAll = (req, res) => {
-  Payment.find()
+  Payment.find({})
+      .populate("userId") 
     .then(data => res.send(data))
     .catch(err => {
       res.status(500).send({
@@ -63,6 +64,22 @@ exports.findOne = (req, res) => {
     .catch(err => {
       res.status(500).send({ message: "Error retrieving Order with id=" + id });
     });
+};
+// Find a single Order by userID
+exports.findUserPayment = async (req, res) => {
+  try {
+    const data = await Payment.find({
+      userId: req.params.userId
+    }).populate("userId");
+
+    res.send(data);
+  } catch (err) {
+    res.status(500).send({
+      message:
+        err.message ||
+        "Some error occurred while retrieving payments."
+    });
+  }
 };
 
 // Update an Order by ID

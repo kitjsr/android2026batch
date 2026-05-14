@@ -44,6 +44,8 @@ module.exports = app => {
   // Retrieve a single Order with id
   router.get("/:id", payments.findOne);
 
+  router.get("/user/:userId", payments.findUserPayment);
+
   // Update an Order with id
   router.put("/:id", payments.update);
 
