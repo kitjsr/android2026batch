@@ -159,6 +159,8 @@ exports.signin = (req, res) => {
       res.status(200).send({
         id: user._id,
         username: user.username,
+        firstName: user.firstName,
+        lastName: user.lastName,
         email: user.email,
         roles: authorities,
         accessToken: token, // ← this fixes your frontend issue
