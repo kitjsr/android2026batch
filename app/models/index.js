@@ -33,5 +33,6 @@ db.ssorders = require("./ssorder.model.js")(mongoose);
 db.follows = require("./follow.model.js")(mongoose);
 db.addresses = require("./address.model.js")(mongoose);
 db.wishlists = require("./wishlist.model.js")(mongoose);
+db.lectures = require("./lecture.model.js")(mongoose);
 
 module.exports = db;
