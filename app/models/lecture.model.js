@@ -8,15 +8,11 @@ module.exports = mongoose => {
 
       courseId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Course",
+        ref: "course",
         required: true,
       },
 
-      // subjectId: {
-      //   type: mongoose.Schema.Types.ObjectId,
-      //   ref: "Subject",
-      //   required: true,
-      // },
+      
       subjectId: {
         type: String,
       },

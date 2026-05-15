@@ -46,7 +46,6 @@ exports.findAll = async (req, res) => {
 
     const data = await Lecture.find()
       .populate("courseId")
-      .populate("subjectId")
       .sort({ createdAt: -1 });
 
     res.send({
@@ -72,7 +71,6 @@ exports.findOne = async (req, res) => {
 
     const data = await Lecture.findById(req.params.id)
       .populate("courseId")
-      .populate("subjectId");
 
     if (!data) {
       return res.status(404).send({
@@ -212,7 +210,6 @@ exports.findByCourse = async (req, res) => {
       courseId: req.params.courseId
     })
     .populate("courseId")
-    .populate("subjectId")
     .sort({ createdAt: -1 });
 
     res.send({
