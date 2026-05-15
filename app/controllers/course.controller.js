@@ -1,7 +1,7 @@
 // controllers/course.controller.js
 
 const db = require("../models");
-const Course = db.course;
+const Course = db.courses;
 
 // Create and Save a new Course
 exports.create = async (req, res) => {
