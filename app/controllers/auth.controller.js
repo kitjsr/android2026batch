@@ -158,6 +158,7 @@ exports.signin = (req, res) => {
       res.status(200).send({
         id: user._id,
         username: user.username,
+        fullName: user.fullName,
         email: user.email,
         roles: authorities,
         accessToken: token, // ← this fixes your frontend issue
@@ -171,5 +172,29 @@ exports.signout = async (req, res) => {
     return res.status(200).send({ message: "You've been signed out!" });
   } catch (err) {
     this.next(err);
+  }
+};
+
+exports.findAll = (req, res) => {
+  User.find().populate("roles")
+    .then(data => res.send(data))
+    .catch(err => {
+      res.status(500).send({
+        message: err.message || "Some error occurred while retrieving DATA."
+      });
+    });
+};
+
+exports.getUserCount = async (req, res) => {
+  try {
+    const count = await User.countDocuments();
+
+    res.status(200).send({
+      totalUsers: count,
+    });
+  } catch (err) {
+    res.status(500).send({
+      message: err.message,
+    });
   }
 };
