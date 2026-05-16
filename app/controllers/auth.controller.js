@@ -11,8 +11,6 @@ exports.signup = (req, res) => {
     fullName: req.body.fullName,
     username: req.body.username,
     email: req.body.email,
-    dob:req.body.dob,
-    schoolCode:req.body.schoolCode,
     password: bcrypt.hashSync(req.body.password, 8),
   });
 
@@ -160,6 +158,7 @@ exports.signin = (req, res) => {
       res.status(200).send({
         id: user._id,
         username: user.username,
+        fullName: user.fullName,
         email: user.email,
         roles: authorities,
         accessToken: token, // ← this fixes your frontend issue
