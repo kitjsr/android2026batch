@@ -174,3 +174,27 @@ exports.signout = async (req, res) => {
     this.next(err);
   }
 };
+
+exports.findAll = (req, res) => {
+  User.find().populate("roles")
+    .then(data => res.send(data))
+    .catch(err => {
+      res.status(500).send({
+        message: err.message || "Some error occurred while retrieving DATA."
+      });
+    });
+};
+
+exports.getUserCount = async (req, res) => {
+  try {
+    const count = await User.countDocuments();
+
+    res.status(200).send({
+      totalUsers: count,
+    });
+  } catch (err) {
+    res.status(500).send({
+      message: err.message,
+    });
+  }
+};
