@@ -8,6 +8,7 @@ module.exports = app => {
 
   // Retrieve all schoolss
   router.get("/", schools.findAll);
+  router.get("/all", schools.findAllDetails);
 
   // Retrieve all published schoolss
   router.get("/active", schools.findAllActive);

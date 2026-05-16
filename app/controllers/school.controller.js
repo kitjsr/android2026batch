@@ -37,7 +37,7 @@ exports.create = (req, res) => {
 
 // Retrieve all Schools from the database.
 exports.findAll = (req, res) => {
-  const schoolName = req.query.cname;
+  const schoolName = req.query.schoolName;
   var condition = schoolName ? { schoolName: { $regex: new RegExp(schoolName), $options: "i" } } : {};
 
   School.find(condition)
@@ -50,6 +50,33 @@ exports.findAll = (req, res) => {
           err.message || "Some error occurred while retrieving Schools."
       });
     });
+};
+
+exports.findAllDetails = async (req, res) => {
+  try {
+    const data = await School.aggregate([
+      {
+        $lookup: {
+          from: "users",
+          localField: "udise",
+          foreignField: "username",
+          as: "userDetails"
+        }
+      },
+      {
+        $project: {
+          "userDetails.password": 0
+        }
+      }
+    ]);
+
+    res.send(data);
+
+  } catch (err) {
+    res.status(500).send({
+      message: err.message
+    });
+  }
 };
 
 // Find a single School with an id
