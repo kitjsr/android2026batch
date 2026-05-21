@@ -12,6 +12,7 @@ exports.signup = (req, res) => {
     username: req.body.username,
     email: req.body.email,
     password: bcrypt.hashSync(req.body.password, 8),
+    status: req.body.status ? req.body.status : false
   });
 
   user.save((err, user) => {
@@ -174,7 +175,7 @@ exports.signout = async (req, res) => {
     this.next(err);
   }
 };
-
+//
 exports.findAll = (req, res) => {
   User.find().populate("roles")
     .then(data => res.send(data))
@@ -195,6 +196,39 @@ exports.getUserCount = async (req, res) => {
   } catch (err) {
     res.status(500).send({
       message: err.message,
+    });
+  }
+};
+
+exports.changeStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const user = await User.findById(id);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    
+    user.active = !user.active;
+
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: `User ${
+        user.active ? "activated" : "deactivated"
+      } successfully`,
+      data: user,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
     });
   }
 };
