@@ -174,7 +174,7 @@ exports.signout = async (req, res) => {
     this.next(err);
   }
 };
-
+//
 exports.findAll = (req, res) => {
   User.find().populate("roles")
     .then(data => res.send(data))
