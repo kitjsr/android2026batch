@@ -160,6 +160,7 @@ exports.signin = (req, res) => {
         id: user._id,
         username: user.username,
         fullName: user.fullName,
+        status: user.status,
         email: user.email,
         roles: authorities,
         accessToken: token, // ← this fixes your frontend issue
