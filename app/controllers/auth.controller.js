@@ -64,54 +64,6 @@ exports.signup = (req, res) => {
   });
 };
 
-// exports.signin = (req, res) => {
-//   User.findOne({
-//     username: req.body.username,
-//   })
-//     .populate("roles", "-__v")
-//     .exec((err, user) => {
-//       if (err) {
-//         res.status(500).send({ message: err });
-//         return;
-//       }
-
-//       if (!user) {
-//         return res.status(404).send({ message: "User Not found." });
-//       }
-
-//       var passwordIsValid = bcrypt.compareSync(
-//         req.body.password,
-//         user.password
-//       );
-
-//       if (!passwordIsValid) {
-//         return res.status(401).send({ message: "Invalid Password!" });
-//       }
-
-//       const token = jwt.sign({ id: user.id },
-//                               config.secret,
-//                               {
-//                                 algorithm: 'HS256',
-//                                 allowInsecureKeySizes: true,
-//                                 expiresIn: 86400, // 24 hours
-//                               });
-
-//       var authorities = [];
-
-//       for (let i = 0; i < user.roles.length; i++) {
-//         authorities.push("ROLE_" + user.roles[i].name.toUpperCase());
-//       }
-
-//       req.session.token = token;
-
-//       res.status(200).send({
-//         id: user._id,
-//         username: user.username,
-//         email: user.email,
-//         roles: authorities,
-//       });
-//     });
-// };
 exports.signin = (req, res) => {
   User.findOne({
     username: req.body.username,
@@ -228,6 +180,48 @@ exports.changeStatus = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+exports.changePassword = async (req, res) => {
+  try {
+    const { userId, currentPassword, newPassword } = req.body;
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).send({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    const passwordIsValid = bcrypt.compareSync(
+      currentPassword,
+      user.password
+    );
+
+    if (!passwordIsValid) {
+      return res.status(401).send({
+        success: false,
+        message: "Current password is incorrect",
+      });
+    }
+
+    user.password = bcrypt.hashSync(newPassword, 8);
+
+    await user.save();
+
+    res.status(200).send({
+      success: true,
+      message: "Password changed successfully",
+    });
+
+  } catch (error) {
+    res.status(500).send({
       success: false,
       message: error.message,
     });

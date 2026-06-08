@@ -25,5 +25,6 @@ module.exports = function(app) {
   app.get("/api/auth/users", controller.findAll);
   app.get("/api/auth/usercount", controller.getUserCount);
   app.post("/api/auth/changeStatus/:id", controller.changeStatus);
+  app.post("/api/auth/changepassword", controller.changePassword);
   //
 };
