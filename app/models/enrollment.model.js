@@ -9,7 +9,7 @@ const EnrollmentSchema = new mongoose.Schema(
     },
     course: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Course",
+      ref: "course",
       required: true,
     },
     purchaseDate: {

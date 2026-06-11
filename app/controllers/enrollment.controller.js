@@ -47,7 +47,7 @@ exports.paymentSuccess = async (req, res) => {
     const { id } = req.params;
     const { transactionId, amountPaid, expiryDate } = req.body;
 
-    const enrollment = await Enrollment.findByIdAndUpdate(
+    const enrollment = await Enrollment.findByIdAndUpdate(+
       id,
       {
         paymentStatus: "paid",
