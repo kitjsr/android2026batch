@@ -10,6 +10,8 @@ module.exports = (app) => {
   router.put("/:id/failed", enrollment.paymentFailed);
 
   router.get("/", enrollment.findAll);
+  
+  router.get("/popular", enrollment.popular);
 
   router.get("/:id", enrollment.findOne);
 

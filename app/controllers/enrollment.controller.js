@@ -113,6 +113,51 @@ exports.findAll = async (req, res) => {
   }
 };
 
+exports.popular = async (req, res) => {
+  try {
+    const data = await Enrollment.aggregate([
+      {
+        $group: {
+          _id: "$course",
+          totalEnrollments: { $sum: 1 }
+        }
+      },
+      {
+        $sort: {
+          totalEnrollments: -1
+        }
+      },
+      {
+        $lookup: {
+          from: "courses", 
+          localField: "_id",
+          foreignField: "_id",
+          as: "course"
+        }
+      },
+      {
+        $unwind: "$course"
+      },
+      {
+        $project: {
+          _id: 0,
+          courseId: "$course._id",
+          title: "$course.title",
+          category: "$course.category",
+          price: "$course.price",
+          totalEnrollments: 1
+        }
+      }
+    ]);
+
+    res.status(200).json(data);
+  } catch (err) {
+    res.status(500).json({
+      message: err.message
+    });
+  }
+};
+
 exports.findOne = async (req, res) => {
   try {
     const data = await Enrollment.findById(req.params.id)
