@@ -47,8 +47,8 @@ exports.paymentSuccess = async (req, res) => {
     const { id } = req.params;
     const { transactionId, amountPaid, expiryDate } = req.body;
 
-    const enrollment = await Enrollment.findByIdAndUpdate(+
-      id,
+    const enrollment = await Enrollment.findByIdAndUpdate(
+      +id,
       {
         paymentStatus: "paid",
         transactionId,
@@ -56,7 +56,7 @@ exports.paymentSuccess = async (req, res) => {
         purchaseDate: new Date(),
         expiryDate,
       },
-      { new: true }
+      { new: true },
     );
 
     if (!enrollment) {
@@ -82,7 +82,7 @@ exports.paymentFailed = async (req, res) => {
       {
         paymentStatus: "failed",
       },
-      { new: true }
+      { new: true },
     );
 
     if (!enrollment) {
@@ -101,9 +101,7 @@ exports.paymentFailed = async (req, res) => {
 
 exports.findAll = async (req, res) => {
   try {
-    const data = await Enrollment.find()
-      .populate("user")
-      .populate("course");
+    const data = await Enrollment.find().populate("user").populate("course");
 
     res.send(data);
   } catch (err) {
@@ -119,24 +117,24 @@ exports.popular = async (req, res) => {
       {
         $group: {
           _id: "$course",
-          totalEnrollments: { $sum: 1 }
-        }
+          totalEnrollments: { $sum: 1 },
+        },
       },
       {
         $sort: {
-          totalEnrollments: -1
-        }
+          totalEnrollments: -1,
+        },
       },
       {
         $lookup: {
-          from: "courses", 
+          from: "courses",
           localField: "_id",
           foreignField: "_id",
-          as: "course"
-        }
+          as: "course",
+        },
       },
       {
-        $unwind: "$course"
+        $unwind: "$course",
       },
       {
         $project: {
@@ -145,15 +143,15 @@ exports.popular = async (req, res) => {
           title: "$course.title",
           category: "$course.category",
           price: "$course.price",
-          totalEnrollments: 1
-        }
-      }
+          totalEnrollments: 1,
+        },
+      },
     ]);
 
     res.status(200).json(data);
   } catch (err) {
     res.status(500).json({
-      message: err.message
+      message: err.message,
     });
   }
 };
@@ -163,44 +161,45 @@ exports.popularGraph = async (req, res) => {
     const data = await Enrollment.aggregate([
       {
         $match: {
-          paymentStatus: "paid"
-        }
+          paymentStatus: "paid",
+        },
       },
       {
         $group: {
           _id: "$course",
-          enrollments: { $sum: 1 }
-        }
-      },
-      {
-        $sort: {
-          enrollments: -1
-        }
+          enrollments: { $sum: 1 },
+        },
       },
       {
         $lookup: {
           from: "courses",
           localField: "_id",
           foreignField: "_id",
-          as: "course"
-        }
+          as: "course",
+        },
       },
       {
-        $unwind: "$course"
+        $unwind: "$course",
       },
       {
-        $project: {
-          _id: 0,
-          title: "$course.title",
-          enrollments: 1
-        }
-      }
+        $group: {
+          _id: "$course.title",
+          enrollments: {
+            $sum: "$enrollments",
+          },
+        },
+      },
+      {
+        $sort: {
+          enrollments: -1,
+        },
+      },
     ]);
 
     res.status(200).json(data);
   } catch (err) {
     res.status(500).json({
-      message: err.message
+      message: err.message,
     });
   }
 };
@@ -248,7 +247,7 @@ exports.updateProgress = async (req, res) => {
       },
       {
         new: true,
-      }
+      },
     );
 
     if (!enrollment) {
