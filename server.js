@@ -124,6 +124,7 @@ require("./app/routes/wishlist.routes")(app);
 require("./app/routes/courseSyllabus.routes")(app);
 require("./app/routes/lecture.routes")(app);
 require("./app/routes/enrollment.routes")(app);
+require("./app/routes/support.routes")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8090;
