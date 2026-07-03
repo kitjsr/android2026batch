@@ -1,28 +1,28 @@
-module.exports = app => {
-  const orders = require("../controllers/order.controller.js");
+module.exports = (app) => {
+  const trades = require("../controllers/store.controller.js");
 
   const router = require("express").Router();
 
-  // Create a new Order
-  router.post("/", orders.create);
+  // Create a new Trade
+  router.post("/", trades.create);
 
-  // Retrieve all Orders
-  router.get("/", orders.findAll);
+  // Retrieve all Trades
+  router.get("/", trades.findAll);
 
-  // Retrieve all active Orders
-  router.get("/active", orders.findAllActive);
+  // Retrieve all Trades by User ID
+  router.get("/user/:userId", trades.findByUser);
 
-  // Retrieve a single Order with id
-  router.get("/:id", orders.findOne);
+  // Retrieve a single Trade with id
+  router.get("/:id", trades.findOne);
 
-  // Update an Order with id
-  router.put("/:id", orders.update);
+  // Update a Trade with id
+  router.put("/:id", trades.update);
 
-  // Delete an Order with id
-  router.delete("/:id", orders.delete);
+  // Delete a Trade with id
+  router.delete("/:id", trades.delete);
 
-  // Delete all Orders
-  router.delete("/", orders.deleteAll);
+  // Delete all Trades
+  router.delete("/", trades.deleteAll);
 
-  app.use("/api/orders", router);
+  app.use("/api/stores", router);
 };
