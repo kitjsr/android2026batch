@@ -120,7 +120,7 @@ require("./app/routes/ssorder.routes")(app);
 require("./app/routes/follow.routes")(app);
 require("./app/routes/address.routes")(app);
 require("./app/routes/wishlist.routes")(app);
-require("./app/routes/payoutrequest.routes")(app);
+// require("./app/routes/payoutrequest.routes")(app);
 require("./app/routes/store.routes")(app);
 
 // set port, listen for requests
