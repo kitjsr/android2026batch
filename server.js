@@ -100,8 +100,6 @@ app.get('/upload/:filename', (req, res) => {
 //////////////
 require("./app/routes/auth.routes")(app);
 require("./app/routes/user.routes")(app);
-require("./app/routes/student.routes")(app);
-require("./app/routes/qpaper.routes")(app);
 require("./app/routes/publisher.routes")(app);
 require("./app/routes/cat.routes")(app);
 require("./app/routes/customer.routes")(app);
